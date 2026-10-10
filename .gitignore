@@ -1,0 +1,23 @@
+.DS_Store
+__pycache__/
+*.pyc
+/build/
+/dist/
+/private-inputs/
+*.app/
+*.dmg
+*.zip
+*.rom
+*.ks[0-9]
+*.srm
+*.o
+*.dll
+*.exe
+*.ico
+*.icns
+*.bin
+*.log
+
+.venv/
+# Licensed renderer source assets are needed to reproduce its configuration UI.
+!third_party/**/*.ico

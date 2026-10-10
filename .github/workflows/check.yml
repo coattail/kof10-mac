@@ -1,0 +1,30 @@
+name: Source checks
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  launcher:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+      - name: Python and shell syntax
+        run: |
+          python3 -m py_compile scripts/build.py scripts/package.py
+          bash -n src/launch.sh
+          plutil -lint config/Info.plist config/Runtime-Info.plist
+      - name: Compile macOS 11 launcher
+        run: |
+          mkdir -p build
+          xcrun swiftc -O -target arm64-apple-macosx11.0 src/Launcher.swift -o build/KOFMac
+          xcrun vtool -show-build build/KOFMac
+  renderer:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Windows cross compiler
+        run: sudo apt-get update && sudo apt-get install -y gcc-mingw-w64-i686 binutils-mingw-w64-i686
+      - name: Build complete renderer source
+        run: make -C third_party/cnc-ddraw -j2
