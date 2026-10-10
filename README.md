@@ -46,4 +46,4 @@ Wine 使用 [Gcenx Wine 11.0_1](https://github.com/Gcenx/macOS_Wine_builds/relea
 - `scripts/`：本地构建、下载压缩包和校验清单生成。
 - `docs/`：安装、控制器、验证范围与发布步骤。
 
-[第三方来源与许可](docs/THIRD_PARTY.md) · [发布步骤](docs/RELEASING.md)
+[第三方来源与许可](docs/THIRD_PARTY.md) · [发布验证记录](docs/VERIFICATION.md) · [发布步骤](docs/RELEASING.md)
