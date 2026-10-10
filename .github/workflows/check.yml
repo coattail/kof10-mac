@@ -13,7 +13,7 @@ jobs:
       - name: Python and shell syntax
         run: |
           python3 -m py_compile scripts/build.py scripts/package.py
-          bash -n src/launch.sh
+          bash -n src/launch.sh src/install-runtime.sh
           plutil -lint config/Info.plist config/Runtime-Info.plist
       - name: Compile macOS 11 launcher
         run: |

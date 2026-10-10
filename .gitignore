@@ -21,3 +21,6 @@ __pycache__/
 .venv/
 # Licensed renderer source assets are needed to reproduce its configuration UI.
 !third_party/**/*.ico
+
+/dist-public/
+/release/

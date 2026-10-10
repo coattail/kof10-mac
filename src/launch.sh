@@ -6,19 +6,25 @@ export WINEPREFIX="$SUPPORT/Prefix"
 export WINEDEBUG="${KOF_DEBUG:--all,err+all}"
 export LANG=zh_CN.UTF-8
 export LC_ALL=zh_CN.UTF-8
-export PATH="$ROOT/wine/bin:/usr/bin:/bin:/usr/sbin:/sbin"
-export WINESERVER="$ROOT/wine/bin/wineserver"
-export WINEDLLPATH="$ROOT/wine/lib/wine"
-export WINELOADER="$ROOT/GameRuntime.app/Contents/MacOS/wine"
 export MVK_CONFIG_LOG_LEVEL=0
 export WINEDLLOVERRIDES='ddraw=n,b;mscoree,mshtml=;winemenubuilder.exe='
-WINE="$ROOT/wine/bin/wine"
-SERVER="$ROOT/wine/bin/wineserver"
 mkdir -p "$SUPPORT" "$HOME/Library/Logs/KOF10Mac"
 exec >> "$HOME/Library/Logs/KOF10Mac/game.log" 2>&1
 printf '\n--- %s ---\n' "$(date)"
 printf 'preparing\n' > "$SUPPORT/run.state"
 if ! /usr/bin/arch -x86_64 /usr/bin/true; then exit 10; fi
+if [ -x "$ROOT/wine/bin/wine" ]; then
+  RUNTIME_ROOT="$ROOT"
+else
+  /bin/bash "$ROOT/install-runtime.sh"
+  RUNTIME_ROOT="$SUPPORT/Runtime/11.0_1"
+fi
+export PATH="$RUNTIME_ROOT/wine/bin:/usr/bin:/bin:/usr/sbin:/sbin"
+export WINESERVER="$RUNTIME_ROOT/wine/bin/wineserver"
+export WINEDLLPATH="$RUNTIME_ROOT/wine/lib/wine"
+export WINELOADER="$RUNTIME_ROOT/GameRuntime.app/Contents/MacOS/wine"
+WINE="$RUNTIME_ROOT/wine/bin/wine"
+SERVER="$RUNTIME_ROOT/wine/bin/wineserver"
 trap '"$SERVER" -k >/dev/null 2>&1 || true; exit 0' TERM INT HUP
 if [ ! -f "$SUPPORT/.ready-v1" ]; then
   "$WINE" wineboot -u

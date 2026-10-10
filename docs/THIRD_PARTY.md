@@ -9,6 +9,6 @@
 | 微软 VC6 依赖 | https://download.microsoft.com/download/vc60pro/Update/2/W9XNT4/EN-US/VC6RedistSetup_deu.exe | 微软许可；由构建者单独提供，不作为本项目 MIT 文件 |
 | Kawaks、游戏 ROM、BIOS、原图标、游戏预设文件 | 用户本地游戏目录 | 第三方文件，须分别具有适用的使用与分发权限，公共 Git 仓库不包含这些文件 |
 
-本项目的 MIT 许可不覆盖游戏 ROM、BIOS、微软文件、Wine 及其依赖或第三方模拟器。完整游戏 Release 的公开分发尚未确认授权。
+本项目的 MIT 许可不覆盖游戏 ROM、BIOS、微软文件、Wine 及其依赖或第三方模拟器。发布者已确认原包游戏文件的公开分发授权。公共 Release 包不附带 Wine 及其依赖，由玩家本机直接从上游下载固定版本并保留上游文件。
 
 Wine 的主要源代码见 https://gitlab.winehq.org/wine/wine/-/tree/wine-11.0 。若再分发包含 Wine 及依赖的二进制包，发布者需同时核对实际构建所用补丁与依赖许可，并按适用许可证提供完整对应源码和必要声明；仅附上 Wine 的许可证文本不能代替这些要求。

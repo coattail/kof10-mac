@@ -8,9 +8,9 @@
 
 [下载版本页面](https://github.com/coattail/kof10-mac/releases) · [安装与操作说明](docs/INSTALL.md) · [已知问题](docs/COMPATIBILITY.md)
 
-目前仓库公开启动器、配置、完整显示组件源码和打包脚本。可运行应用压缩包在本地已准备，游戏文件公开分发授权尚未确认，因此暂未公开包含游戏本体的 Release。仓库的 **Code → Download ZIP 是源码，不是可直接运行的游戏**。
+在 [Releases](https://github.com/coattail/kof10-mac/releases/latest) 下载 `KOF10Mac-v1.0.2-AppleSilicon.zip`，解压后拖入“应用程序”。下载包包含拳皇 94、95、96、97、98、99、2000、2001、2002、2003 的原包游戏内容。首次启动需要联网，自动从固定上游版本下载约 185 MB 的 Wine 运行时并校验 SHA-256；之后使用本地缓存，不需要再下载运行时。仓库的 **Code → Download ZIP 是源码，不是可直接运行的游戏**。
 
-源码不包含商业 ROM、BIOS、模拟器可执行文件、微软运行库、游戏图标或用户存档。构建时从你有权使用的本地目录导入这些文件。此项目的 MIT 许可证只适用于本项目自有代码，第三方文件的许可单独适用。
+Git 源码不包含 ROM、BIOS、模拟器可执行文件、微软运行库、游戏图标或存档；游戏内容放在单独的 Release 附件中。发布者已确认原包游戏文件具有公开分发授权。MIT 许可证只适用于本项目自有代码，第三方内容的权利不因本仓库许可证而改变。
 
 ## 运行要求
 
@@ -29,13 +29,13 @@ python3 -m venv .venv
 make -C third_party/cnc-ddraw
 .venv/bin/python scripts/build.py \
   --game-dir "/path/to/compatible-game" \
-  --wine-dir "/path/to/Wine Stable.app/Contents/Resources/wine"
+  --download-runtime
 .venv/bin/python scripts/package.py "dist/拳皇十周年 Mac.app"
 ```
 
 `--game-dir` 必须包含 `game.exe`、`ROMS/*.zip`、`mfc42.dll`、`msvcp60.dll`、`msvcirt.dll`，以及游戏需要的 BIOS。原 Windows 保护壳版本会崩溃，构建脚本会拒绝已知不兼容的可执行文件；参见[兼容性说明](docs/COMPATIBILITY.md)。
 
-Wine 使用 [Gcenx Wine 11.0_1](https://github.com/Gcenx/macOS_Wine_builds/releases/tag/11.0_1)。通过上游下载和安装，保留其第三方许可。生成的个人应用可直接放入“应用程序”；打包脚本不会自动上传或发布游戏数据。
+Wine 使用 [Gcenx Wine 11.0_1](https://github.com/Gcenx/macOS_Wine_builds/releases/tag/11.0_1)，由最终玩家直接从上游下载到本机，公共游戏附件不再分发 Wine 二进制或其依赖。`--wine-dir` 可替代 `--download-runtime` 用于个人离线构建，离线包的再次分发需要单独满足全部运行时依赖许可。生成的应用可直接放入“应用程序”；打包脚本不会自动上传数据。
 
 ## 项目结构
 

@@ -1,6 +1,6 @@
 # 安装与游玩
 
-仓库的源码 ZIP 不包含可运行游戏。完整应用 Release 尚待游戏文件公开分发授权确认；当前可自行使用合法取得的游戏目录按照 README 构建。
+请从 Releases 下载完整游戏应用 ZIP。仓库的 Code → Download ZIP 只提供源码，不能直接游玩。完整应用包包含原包游戏，首次启动需要互联网下载运行时（约 185 MB）。
 
 ## 安装 Mac 应用包
 
@@ -8,7 +8,7 @@
 2. 解压，把“拳皇十周年 Mac.app”拖入“应用程序”。
 3. 本包使用临时签名，尚未获得 Apple Developer ID 签名或公证。首次打开可能被系统阻止。确认下载来源和校验值后，按照 [Apple 的打开应用说明](https://support.apple.com/en-us/102445)，在“系统设置 → 隐私与安全性”中为此应用选择“仍要打开”。不要关闭系统整体安全保护；若提示应用损坏或包含恶意内容，先停止并反馈。
 4. 若启动器提示需要 Rosetta，按照 [Apple 的 Rosetta 安装说明](https://support.apple.com/en-us/102527)安装。应用不会自动接受软件许可。
-5. 首次运行会建立独立的游戏环境，需要稍等。在模拟器的 **File → Load game** 中双击游戏版本。
+5. 首次运行会从 Wine 上游固定版本下载并验证约 185 MB 的运行组件，然后建立独立游戏环境，需要稍等。在模拟器的 **File → Load game** 中双击游戏版本。
 
 启动器没有 macOS 28 的最低版本要求；最低部署目标为 macOS 11.0。此包仅支持 Apple Silicon，具体系统兼容验证范围见 README。
 
@@ -37,6 +37,7 @@
 
 ## 存档与排错
 
+- 运行时缓存：`~/Library/Application Support/KOF10Mac/Runtime/11.0_1`
 - 游戏环境：`~/Library/Application Support/KOF10Mac/Prefix/drive_c/KOF`
 - SAVES：即时存档；EEPROM：游戏设置；INI：游戏按键配置。
 - 日志：`~/Library/Logs/KOF10Mac/game.log`

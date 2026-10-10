@@ -36,7 +36,7 @@ final class Launcher: NSObject, NSApplicationDelegate {
     if process.terminationStatus != 0 {
      self?.window?.orderOut(nil)
      let alert = NSAlert(); alert.messageText = "游戏未能启动"
-     alert.informativeText = process.terminationStatus == 10 ? "此运行包需要 Rosetta。请先安装 Rosetta，再重新打开。" : "请查看 Library/Logs/KOF10Mac/game.log 中的运行日志。"
+     alert.informativeText = process.terminationStatus == 10 ? "此运行包需要 Rosetta。请先安装 Rosetta，再重新打开。" : ([20, 21, 22].contains(process.terminationStatus) ? "兼容运行组件下载或安装失败，请检查网络后重试。详情见 Library/Logs/KOF10Mac/game.log。" : "请查看 Library/Logs/KOF10Mac/game.log 中的运行日志。")
      alert.addButton(withTitle: "打开日志"); alert.addButton(withTitle: "关闭")
      if alert.runModal() == .alertFirstButtonReturn { self?.openLogs() }
     }
@@ -46,7 +46,10 @@ final class Launcher: NSObject, NSApplicationDelegate {
    timer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { [weak self] _ in
     guard let self = self else { return }
     let state = try? String(contentsOf: self.support.appendingPathComponent("run.state"), encoding: .utf8)
-    if state?.trimmingCharacters(in: .whitespacesAndNewlines) == "ready" { self.window?.orderOut(nil); self.timer?.invalidate() }
+    let current = state?.trimmingCharacters(in: .whitespacesAndNewlines)
+    if current == "downloading" { label.stringValue = "首次启动正在下载兼容运行组件（约 185 MB）…\n完成后即可载入游戏。" }
+    if current == "preparing" { label.stringValue = "正在准备游戏…\n首次启动稍需等待，之后双击即可进入。" }
+    if current == "ready" { self.window?.orderOut(nil); self.timer?.invalidate() }
    }
   } catch {
    let alert = NSAlert(); alert.messageText = "启动失败"; alert.informativeText = error.localizedDescription; alert.runModal(); NSApp.terminate(nil)
