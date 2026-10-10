@@ -28,3 +28,5 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y gcc-mingw-w64-i686 binutils-mingw-w64-i686
       - name: Build complete renderer source
         run: make -C third_party/cnc-ddraw -j2
+      - name: Build graceful game switch helper
+        run: i686-w64-mingw32-gcc -Os -s -mwindows -nostdlib -fno-stack-protector '-Wl,--entry,_mainCRTStartup@0' src/close-game.c -o close-game.exe -lkernel32 -luser32

@@ -5,6 +5,7 @@ import hashlib
 import json
 import plistlib
 import subprocess
+import zipfile
 from pathlib import Path
 
 p=argparse.ArgumentParser(description=__doc__)
@@ -15,13 +16,18 @@ if not (app/'Contents/Info.plist').is_file():p.error('Not an app bundle')
 subprocess.run(['codesign','--verify','--deep','--strict',str(app)],check=True)
 info=plistlib.loads((app/'Contents/Info.plist').read_bytes())
 if info.get('LSMinimumSystemVersion')!='11.0':p.error('Unexpected macOS deployment target')
+if 'KOFSupportDirectoryName' in info or info.get('CFBundleIdentifier') != 'local.kof10.mac':p.error('Restore release bundle identity before packaging')
 for f in app.rglob('*'):
  if f.is_file() and (f.suffix.lower() in ['.log','.bin'] or f.name in ['user.reg','system.reg','userdef.reg','.DS_Store']):
   p.error(f'Private/debug data present: {f.relative_to(app)}')
 out.mkdir(parents=True,exist_ok=True)
-archive=out/'KOF10Mac-v1.0.2-AppleSilicon.zip'
+archive=out/'KOF10Mac-AppleSilicon.zip'
 if archive.exists():p.error('Archive already exists')
 subprocess.run(['/usr/bin/ditto','-c','-k','--sequesterRsrc','--keepParent',str(app),str(archive)],check=True)
+# Visible help remains available even if macOS blocks the first app launch.
+help_file=Path(__file__).resolve().parents[1]/'docs/打不开时看这里.txt'
+with zipfile.ZipFile(archive,'a',compression=zipfile.ZIP_DEFLATED) as z:
+ z.write(help_file,help_file.name)
 sha=hashlib.sha256(archive.read_bytes()).hexdigest()
 (out/'SHA256SUMS').write_text(f'{sha}  {archive.name}\n')
 files=[]
