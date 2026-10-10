@@ -27,3 +27,6 @@ __pycache__/
 
 /dist-beginner/
 /release-beginner/
+
+/dist-emulator/
+/release-emulator/

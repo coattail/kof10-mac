@@ -66,27 +66,11 @@ if [ ! -f "$SUPPORT/.controller-input-v4" ]; then
   /bin/mv "$INPUT_CONFIG.tmp" "$INPUT_CONFIG"
   touch "$SUPPORT/.controller-input-v4"
 fi
-# Launcher-only helper requests the emulator's normal close path on game switches.
-/bin/cp "$ROOT/Game/close-game.exe" "$WINEPREFIX/drive_c/KOF/close-game.exe"
-/bin/rm -f "$SUPPORT/switch.request"
 cd "$WINEPREFIX/drive_c/KOF"
 printf 'ready\n' > "$SUPPORT/run.state"
-# Only known game IDs can reach the emulator command line.
-GAME_ID="${KOF_GAME_ID:-kof02x}"
-case "$GAME_ID" in
-  kof94|kof95|kof96|kof97|kof98x|kof99x|kof00x|kof01x|kof02x|kof03x) ;;
-  *) GAME_ID=kof02x ;;
-esac
-WINELOADERNOEXEC=1 "$WINELOADER" 'C:\KOF\game.exe' "$GAME_ID" &
+WINELOADERNOEXEC=1 "$WINELOADER" 'C:\KOF\game.exe' &
 GAME_PID=$!
 set +e
-while kill -0 "$GAME_PID" 2>/dev/null; do
-  if [ -f "$SUPPORT/switch.request" ]; then
-    /bin/rm -f "$SUPPORT/switch.request"
-    "$WINE" 'C:\KOF\close-game.exe'
-  fi
-  /bin/sleep 0.2
-done
 wait "$GAME_PID"
 GAME_STATUS=$?
 set -e

@@ -2,13 +2,13 @@
 
 ## [⬇️ 下载游戏（Apple Silicon Mac）](https://github.com/coattail/kof10-mac/releases/latest/download/KOF10Mac-AppleSilicon.zip)
 
-**解压 → 双击“拳皇十周年 Mac” → 自动进入拳皇 2002。**
+**解压 → 双击“拳皇十周年 Mac” → 打开 Kawaks 模拟器。**
 
-第一次打开会自动联网准备，窗口会显示进度，完成后直接进入游戏。以后双击即可进入，不用找 ROM、不用设置模拟器，也不用在英文菜单里载入游戏。可直接从下载目录运行；想长期保留，再拖入“应用程序”即可。
+第一次打开会自动联网准备，窗口会显示进度，完成后直接进入模拟器。以后双击即可进入，不用找 ROM 或手动安装运行组件。可直接从下载目录运行；想长期保留，再拖入“应用程序”即可。
 
-**开始玩：按 `2` 投币，按 `1` 开始；`W A S D` 移动，`J K U I` 攻击。**
+**载入游戏：在模拟器中选择 `File → Load game`，双击想玩的版本。按 `2` 投币，按 `1` 开始；`W A S D` 移动，`J K U I` 攻击。**
 
-想换拳皇 97、98 等版本，点击 Dock 中“拳皇十周年 Mac”的地球图标，在中文窗口中点选。下次打开会记住这里选的版本。保留模拟器原有按键设置、存档、金手指和 4:3 连续缩放。
+应用直接打开模拟器主窗口，不显示额外的版本选择界面，也不自动载入某款游戏。选择和切换游戏都使用模拟器原有的 File → Load game。点击 Dock 中的应用图标会返回模拟器。按键设置、存档、金手指和 4:3 连续缩放保持原有行为。
 
 > 首次打开若被 macOS 拦住：先尝试打开一次，再到“系统设置 → 隐私与安全性 → 仍要打开”。当前应用尚未获 Apple 签名与公证，这一步暂时不能省略。只需为此应用操作，无需关闭整体安全保护。[打不开时的说明](docs/INSTALL.md)
 
@@ -35,13 +35,12 @@ make -C third_party/cnc-ddraw
 .venv/bin/python scripts/package.py "dist/拳皇十周年 Mac.app"
 ```
 
-`--game-dir` 必须包含 `game.exe`、`ROMS/*.zip`、`mfc42.dll`、`msvcp60.dll`、`msvcirt.dll`，以及匹配的 BIOS。原保护壳版本无法运行，构建脚本拒绝已知不兼容文件；见[兼容性说明](docs/COMPATIBILITY.md)。关闭游戏辅助程序使用 MinGW 或 LLVM-MinGW 编译；可通过 `KOF_WINDOWS_CC` 指定编译器路径。
+`--game-dir` 必须包含 `game.exe`、`ROMS/*.zip`、`mfc42.dll`、`msvcp60.dll`、`msvcirt.dll`，以及匹配的 BIOS。原保护壳版本无法运行，构建脚本拒绝已知不兼容文件；见[兼容性说明](docs/COMPATIBILITY.md)。
 
 Wine 使用 [Gcenx Wine 11.0_1](https://github.com/Gcenx/macOS_Wine_builds/releases/tag/11.0_1)，由玩家直接从上游下载，固定版本并校验 SHA-256。`--wine-dir` 可替代 `--download-runtime` 用于个人离线构建；再次分发离线包需要单独满足全部运行时依赖许可。
 
-- `src/Launcher.swift`：自动进入游戏、中文选择窗口、进度、重试与 Apple 安装引导。
+- `src/Launcher.swift`：直接打开模拟器、进度、重试与 Apple 安装引导。
 - `src/launch.sh`：独立游戏环境与兼容配置迁移。
-- `src/close-game.c`：按模拟器正常关闭路径切换游戏，保留设置。
 - `config/`：应用元数据、4:3 显示配置和 Wine 设置。
 - `third_party/cnc-ddraw/`：完整 MIT 显示源码，包含实时缩放修复。
 - `scripts/`：构建、ZIP 和校验清单生成。

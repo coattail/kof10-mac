@@ -3,7 +3,6 @@
 import argparse
 import hashlib
 import json
-import os
 import plistlib
 import shutil
 import subprocess
@@ -43,11 +42,9 @@ def main():
         p.error('Game input and bundle output must be separate directories')
     contents=a.output/'Contents'; resources=contents/'Resources'
     (contents/'MacOS').mkdir(parents=True)
-    shutil.copytree(a.game_dir,resources/'Game',ignore=shutil.ignore_patterns('*.log','.DS_Store'))
+    shutil.copytree(a.game_dir,resources/'Game',ignore=shutil.ignore_patterns('*.log','.DS_Store','close-game.exe'))
     if a.wine_dir: shutil.copytree(a.wine_dir,resources/'wine',symlinks=True)
     shutil.copy2(a.ddraw_dll,resources/'Game/ddraw.dll')
-    compiler = os.environ.get('KOF_WINDOWS_CC', 'i686-w64-mingw32-gcc')
-    run(compiler, '-Os', '-s', '-mwindows', '-nostdlib', '-fno-stack-protector', '-Wl,--entry,_mainCRTStartup@0', ROOT/'src/close-game.c', '-o', resources/'Game/close-game.exe', '-lkernel32', '-luser32')
     shutil.copy2(ROOT/'config/ddraw.ini',resources/'Game/ddraw.ini')
     shutil.copy2(ROOT/'config/mac-settings.reg',resources/'mac-settings.reg')
     shutil.copy2(ROOT/'src/launch.sh',resources/'launch.sh')
@@ -55,7 +52,7 @@ def main():
     shutil.copy2(ROOT/'src/install-runtime.sh',resources/'install-runtime.sh')
     shutil.copy2(ROOT/'config/Runtime-Info.plist',resources/'Runtime-Info.plist')
     info=plistlib.loads((ROOT/'config/Info.plist').read_bytes())
-    info['CFBundleShortVersionString']='1.0.3'; info['CFBundleVersion']='5'
+    info['CFBundleShortVersionString']='1.0.4'; info['CFBundleVersion']='6'
     (contents/'Info.plist').write_bytes(plistlib.dumps(info))
     runtime=resources/'GameRuntime.app/Contents'
     (runtime/'MacOS').mkdir(parents=True)
@@ -98,7 +95,6 @@ def main():
             data=plistlib.loads(target.read_bytes());data.pop('CFBundleIconFile',None);target.write_bytes(plistlib.dumps(data))
     (resources/'Sources').mkdir(exist_ok=True)
     shutil.copy2(ROOT/'src/Launcher.swift',resources/'Sources/Launcher.swift')
-    shutil.copy2(ROOT/'src/close-game.c',resources/'Sources/close-game.c')
     shutil.copytree(ROOT/'licenses',resources/'Licenses')
     shutil.copy2(ROOT/'LICENSE',resources/'Licenses/KOF10Mac-MIT.txt')
     shutil.copy2(ROOT/'third_party/cnc-ddraw/LICENSE',resources/'Licenses/cnc-ddraw-LICENSE.txt')
@@ -107,7 +103,7 @@ def main():
     shutil.copytree(ROOT/'third_party/cnc-ddraw',source_zip,ignore=shutil.ignore_patterns('*.o','*.dll','*.exe','.git'))
     # No shell/runtime dependency is needed to build the native entry point.
     run('xcrun','swiftc','-O','-target','arm64-apple-macosx11.0',ROOT/'src/Launcher.swift','-o',contents/'MacOS/KOFMac')
-    metadata={'version':'1.0.3','game_exe_sha256':exe_hash,'ddraw_sha256':hashlib.sha256(a.ddraw_dll.read_bytes()).hexdigest(),'wine_release':'https://github.com/Gcenx/macOS_Wine_builds/releases/tag/11.0_1','target':'arm64-apple-macosx11.0','notarized':False,'runtime_mode':'download-on-first-launch' if a.download_runtime else 'bundled-personal-runtime'}
+    metadata={'version':'1.0.4','game_exe_sha256':exe_hash,'ddraw_sha256':hashlib.sha256(a.ddraw_dll.read_bytes()).hexdigest(),'wine_release':'https://github.com/Gcenx/macOS_Wine_builds/releases/tag/11.0_1','target':'arm64-apple-macosx11.0','notarized':False,'runtime_mode':'download-on-first-launch' if a.download_runtime else 'bundled-personal-runtime'}
     (resources/'build-info.json').write_text(json.dumps(metadata,ensure_ascii=False,indent=2)+'\n')
     if a.download_runtime:
         shutil.rmtree(resources/'GameRuntime.app')
